@@ -2,27 +2,38 @@ source 'https://rubygems.org'
 
 
 gem 'rails', '4.2.5'
-
 gem 'rails-api'
 
-gem 'spring', :group => :development
-
-
+##### Database #####
 gem 'sqlite3'
 
+##### Analysis #####
+gem 'brakeman'
+gem 'bullet'
+gem 'rails_best_practices'
+gem 'rubocop'
 
+##### Automate Code Review #####
+gem 'saddler'
+gem 'saddler-reporter-github'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+##### Environment Variable #####
+gem 'dotenv-rails'
 
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
+group :development, :test do
+  ##### Debugging #####
+  gem 'awesome_print'
+  gem 'pry-byebug'
+  gem 'web-console', '~> 2.0'
+  gem 'annotate'
 
-# Use unicorn as the app server
-# gem 'unicorn'
+  ##### Testing #####
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'spring'
+end
 
-# Deploy with Capistrano
-# gem 'capistrano', :group => :development
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+group :test do
+  gem 'database_cleaner'
+  gem 'shoulda-matchers'
+end
