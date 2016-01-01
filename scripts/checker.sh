@@ -44,6 +44,11 @@ cat brakeman.json \
     --require saddler/reporter/github \
     --reporter $REPORTER
 
+echo "********************"
+echo "* save outputs     *"
+echo "********************"
+LINT_RESULT_DIR="$CIRCLE_ARTIFACTS/lint"
+
 mkdir "$LINT_RESULT_DIR"
 cp -v "rubocop.xml" "$LINT_RESULT_DIR/"
 cp -v "rails_best_practices_output.xml" "$LINT_RESULT_DIR/"
