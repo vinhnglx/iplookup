@@ -26,18 +26,16 @@ class IpAddress
   #
   # Returns the array
   def ipaddrs
-    begin
-      results = []
-      CSV.foreach(csv_file) do |row|
-        results << {
-          ip_address: "[#{row[0]}, #{row[1]}]",
-          country_name: row[3],
-          country_code: row[2]
-        }
-      end
-      results
-    rescue Exception => e
-      raise e.to_s
+    results = []
+    CSV.foreach(csv_file) do |row|
+      results << {
+        ip_address: "[#{row[0]}, #{row[1]}]",
+        country_name: row[3],
+        country_code: row[2]
+      }
     end
+    results
+  rescue => e
+    raise e.to_s
   end
 end
