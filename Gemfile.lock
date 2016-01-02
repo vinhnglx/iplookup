@@ -263,6 +263,7 @@ DEPENDENCIES
   rails_best_practices
   rspec-rails
   rubocop
+  ruby-progressbar
   saddler
   saddler-reporter-github
   shoulda-matchers
@@ -271,4 +272,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

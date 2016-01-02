@@ -31,7 +31,9 @@ class Countries
     CSV.foreach(csv_file, headers: true) do |row|
       results << row[2]
     end
-    results
+    results << '-'
+  rescue => e
+    raise e.to_s
   end
 
   # Public: Show array of country names
@@ -48,6 +50,8 @@ class Countries
     CSV.foreach(csv_file, headers: true) do |row|
       results << I18n.transliterate(row[0])
     end
-    results
+    results << '-'
+  rescue => e
+    raise e.to_s
   end
 end
