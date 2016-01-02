@@ -21,6 +21,9 @@ gem 'saddler-reporter-github'
 ##### Environment Variable #####
 gem 'dotenv-rails'
 
+##### Progress-bar #####
+gem 'ruby-progressbar'
+
 group :development, :test do
   ##### Debugging #####
   gem 'awesome_print'
