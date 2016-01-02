@@ -27,11 +27,15 @@ class Countries
   #
   # Returns the array
   def country_codes
-    results = []
-    CSV.foreach(csv_file, headers: true) do |row|
-      results << row[2]
+    begin
+      results = []
+      CSV.foreach(csv_file, headers: true) do |row|
+        results << row[2]
+      end
+      results << '-'
+    rescue Exception => e
+      raise e.to_s
     end
-    results
   end
 
   # Public: Show array of country names
@@ -44,10 +48,14 @@ class Countries
   #
   # Returns the array
   def country_names
-    results = []
-    CSV.foreach(csv_file, headers: true) do |row|
-      results << I18n.transliterate(row[0])
+    begin
+      results = []
+      CSV.foreach(csv_file, headers: true) do |row|
+        results << I18n.transliterate(row[0])
+      end
+      results << '-'
+    rescue Exception => e
+      raise e.to_s
     end
-    results
   end
 end
