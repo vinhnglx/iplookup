@@ -16,7 +16,7 @@ class IpAddress
     @csv_file = csv_file
   end
 
-  # Public: List of ip addresses of a country
+  # Public: List of ip addresses and countries
   #
   # Examples
   #
