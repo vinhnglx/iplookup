@@ -11,12 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160102031420) do
+ActiveRecord::Schema.define(version: 20160102060945) do
+
+  create_table "countries", force: :cascade do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "ipaddresses", force: :cascade do |t|
     t.string   "ip_addresses"
-    t.string   "country_code"
-    t.string   "country_name"
+    t.integer  "country_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

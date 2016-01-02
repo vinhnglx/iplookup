@@ -12,8 +12,7 @@
 
 FactoryGirl.define do
   factory :ipaddress do
-    ip_addresses '{option_1: [16843008, 16843263], option_2: [16777216, 16777471]}'
-    country_code 'AU'
-    country_name 'Australia'
+    ip_addresses '[16843008, 16843263]'
+    country
   end
 end
