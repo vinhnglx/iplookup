@@ -17,15 +17,15 @@ namespace :import do
     progressbar = ProgressBar.create(title: 'IpAddress', starting_at: 0, total: 70000, format: '%a <%B> %p%% %t')
 
     # Loop ipaddrs to create Country and Ipaddress
-    ipaddrs.each do |ip|
+    ipaddrs.each do |ipad|
       # Increment progress bar
       progressbar.increment
 
       # Create country
-      country = Country.find_or_create_by(code: ip[:country_code], name: ip[:country_name])
+      country = Country.find_or_create_by(code: ipad[:country_code], name: ipad[:country_name])
 
       # Create Ipaddress
-      Ipaddress.find_or_create_by(ip_addresses: ip[:ip_address], country_id: country.id)
+      Ipaddress.find_or_create_by(ip_addresses: ipad[:ip_address], country_id: country.id)
     end
 
     puts 'DONE'
