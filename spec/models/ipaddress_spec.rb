@@ -15,8 +15,8 @@ require 'rails_helper'
 RSpec.describe Ipaddress, type: :model do
   context 'attributes' do
     it 'has ip_addresses' do
-      expect(build(:ipaddress, ip_addresses: '{option_1: [16843008, 16843263], option_2: [16777216, 16777471]}')).
-        to have_attributes(ip_addresses: '{option_1: [16843008, 16843263], option_2: [16777216, 16777471]}')
+      ip_address = build(:ipaddress, ip_addresses: '{option_1: [16843008, 16843263], option_2: [16777216, 16777471]}')
+      expect(ip_address).to have_attributes(ip_addresses: '{option_1: [16843008, 16843263], option_2: [16777216, 16777471]}')
     end
 
     it 'has country_code' do

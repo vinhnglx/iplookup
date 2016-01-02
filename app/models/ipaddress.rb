@@ -13,7 +13,6 @@ require 'countries'
 #
 
 class Ipaddress < ActiveRecord::Base
-
   # Validations
   validates :country_code, inclusion: { in: Countries.new.country_codes }
   validates :country_name, inclusion: { in: Countries.new.country_names }

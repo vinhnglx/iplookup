@@ -16,5 +16,4 @@ FactoryGirl.define do
     country_code 'AU'
     country_name 'Australia'
   end
-
 end

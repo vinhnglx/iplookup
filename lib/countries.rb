@@ -13,7 +13,7 @@ class Countries
   #   Countries.new(/path/to/csv_file)
   #
   # Returns the object
-  def initialize(csv_file=Rails.root.join('lib', 'countries', 'countries.csv').to_path)
+  def initialize(csv_file = Rails.root.join('lib', 'countries', 'countries.csv').to_path)
     @csv_file = csv_file
   end
 
