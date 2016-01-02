@@ -13,7 +13,6 @@ require 'countries'
 #
 
 class Ipaddress < ActiveRecord::Base
-
   # Relations
   belongs_to :country
 end

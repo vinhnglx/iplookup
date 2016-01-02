@@ -3,5 +3,4 @@ FactoryGirl.define do
     code 'AU'
     name 'Australia'
   end
-
 end
