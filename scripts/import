@@ -1,0 +1,84 @@
+#!/bin/bash
+
+echo "*******************************"
+echo "* Download CSV files          *"
+echo "*******************************"
+cd /tmp
+curl -LOk http://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.CSV.ZIP
+curl -LOk http://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP
+
+echo "****************************"
+echo "* Unzip CSV files          *"
+echo "****************************"
+
+# Ask user do you wanna install unzip tool
+read -p " This project requires unzip. Do you want to install (y|n) " ans
+if [[ ( "$ans" == "y" ) || ( "$ans" == "Y" ) ]]
+then
+  cd /tmp
+  if [ "$(uname)" == "Darwin" ]; then
+    brew install unzip
+  elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    sudo apt-get -y install unzip
+  fi
+fi
+
+echo "****************************"
+echo "* Unzip CSV files          *"
+echo "****************************"
+cd /tmp
+unzip -o IP2LOCATION-LITE-DB1.CSV.ZIP
+unzip -o IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP
+rm -rf IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP IP2LOCATION-LITE-DB1.CSV.ZIP LICENSE-CC-BY-SA-4.0.TXT README_LITE.TXT
+
+echo "***************************************"
+echo "* Split and Import CSV files          *"
+echo "***************************************"
+NUMBER_OF_SPLIT_LINES=70000
+BIG_FILE_PATH_v4=/tmp/IP2LOCATION-LITE-DB1.csv
+SPLIT_FILE_PREFIX_v4="small_v4"
+SPLIT_FILES_v4=/tmp/$SPLIT_FILE_PREFIX*
+
+BIG_FILE_PATH_v6=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv
+SPLIT_FILE_PREFIX_v6="small_v6"
+SPLIT_FILES_v6=/tmp/$SPLIT_FILE_PREFIX*
+
+temp_home () {
+  cd /tmp
+}
+
+rails_app_home () {
+  cd /Users/vinhnguyen/Documents/projects/GitHub/roomorama/iplookup
+}
+
+split_big_csv_into_small_chunks () {
+  echo "Processing $BIG_FILE_PATH_v4"
+  echo "Split $BIG_FILE_PATH_v4 file into small chunks with size $NUMBER_OF_SPLIT_LINES lines..."
+  temp_home && split -l $NUMBER_OF_SPLIT_LINES $BIG_FILE_PATH_v4 $SPLIT_FILE_PREFIX_v4
+  rm -rf $BIG_FILE_PATH_v4
+
+  echo "Processing $BIG_FILE_PATH_v6"
+  echo "Split $BIG_FILE_PATH_v6 file into small chunks with size $NUMBER_OF_SPLIT_LINES lines..."
+  temp_home && split -l $NUMBER_OF_SPLIT_LINES $BIG_FILE_PATH_v6 $SPLIT_FILE_PREFIX_v6
+  rm -rf $BIG_FILE_PATH_v6
+}
+
+process_split_files () {
+  echo "Script executed from: ${PWD}"
+  for f in $SPLIT_FILES_v4
+  do
+    echo "Processing $f file..."
+    rails_app_home && FILE=$f rake import:ipaddrs
+    rm -rf $f
+  done
+
+  for f in $SPLIT_FILES_v6
+  do
+    echo "Processing $f file..."
+    rails_app_home && FILE=$f rake import:ipaddrs
+    rm -rf $f
+  done
+}
+
+split_big_csv_into_small_chunks
+process_split_files
