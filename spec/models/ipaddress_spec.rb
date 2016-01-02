@@ -19,6 +19,10 @@ RSpec.describe Ipaddress, type: :model do
     end
   end
 
+  context 'validations' do
+    it { should validate_presence_of :ip_addresses }
+  end
+
   context 'relations' do
     it { should belong_to(:country) }
   end

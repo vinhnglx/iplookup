@@ -11,6 +11,9 @@ require 'countries'
 #
 
 class Ipaddress < ActiveRecord::Base
+  # Validations
+  validates :ip_addresses, presence: true
+
   # Relations
   belongs_to :country
 end
