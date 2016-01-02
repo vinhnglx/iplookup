@@ -29,7 +29,7 @@ RSpec.describe Ipaddress, type: :model do
   end
 
   context 'validations' do
-    let(:country) { Countries.new(Rails.root.join('lib', 'countries', 'countries.csv').to_path) }
+    let(:country) { Countries.new }
     let(:country_codes) { country.country_codes }
     let(:country_names) { country.country_names }
 
