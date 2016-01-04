@@ -10,8 +10,8 @@ RSpec.describe IpConverter do
     let(:error_msg_v6) { 'address family mismatch' }
 
     it 'converts an ip address to integer' do
-      expect(IpConverter.new(ipv4, Socket::AF_INET).to_integer).to be_a_kind_of(Integer)
-      expect(IpConverter.new(ipv6, Socket::AF_INET6).to_integer).to be_a_kind_of(Integer)
+      expect(IpConverter.new(ipv4, Socket::AF_INET).to_integer).to be_a(Integer)
+      expect(IpConverter.new(ipv6, Socket::AF_INET6).to_integer).to be_a(Integer)
     end
 
     it 'raises an error when pass wrong ip address' do
