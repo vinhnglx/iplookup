@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe IpUtilities do
   let(:extended_class) { Class.new { extend IpUtilities } }
   let(:including_class) { Class.new { include IpUtilities } }
-  let(:included) { including_class.new}
+  let(:included) { including_class.new }
 
   context '.invalid_ip?' do
     describe 'ipv4' do
@@ -117,7 +117,7 @@ RSpec.describe IpUtilities do
 
   context '.ip_to_integer' do
     let(:ip_address) { '113.222.29.10' }
-    let(:invalid_ip_address) { '2309230.209.23929.390923'}
+    let(:invalid_ip_address) { '2309230.209.23929.390923' }
 
     it 'converts ip address to integer' do
       expect(extended_class.ip_to_integer(ip_address)).to be_a(Integer)
