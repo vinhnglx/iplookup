@@ -4,6 +4,7 @@ echo "*******************************"
 echo "* Download CSV files          *"
 echo "*******************************"
 cd /tmp
+sudo rm -rf /tmp/*
 curl -LOk http://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.CSV.ZIP
 curl -LOk http://download.ip2location.com/lite/IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP
 
@@ -26,7 +27,6 @@ fi
 echo "****************************"
 echo "* Unzip CSV files          *"
 echo "****************************"
-cd /tmp
 unzip -o IP2LOCATION-LITE-DB1.CSV.ZIP
 unzip -o IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP
 rm -rf IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP IP2LOCATION-LITE-DB1.CSV.ZIP LICENSE-CC-BY-SA-4.0.TXT README_LITE.TXT
@@ -34,7 +34,14 @@ rm -rf IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP IP2LOCATION-LITE-DB1.CSV.ZIP LICENSE-CC
 echo "*****************************************"
 echo "* Import CSV files to database          *"
 echo "*****************************************"
-cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.csv rake import:ipaddrs -s
-cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv rake import:ipaddrs -s
+
+# Need to replace the project path
+rails_app_home () {
+  cd /Users/vinhnguyen/Documents/projects/GitHub/roomorama/iplookup
+}
+
+rails_app_home && FILE=/tmp/IP2LOCATION-LITE-DB1.csv rake import:ipaddrs -s
+rails_app_home && FILE=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv rake import:ipaddrs -s
+
 rm -rf /tmp/IP2LOCATION-LITE-DB1.csv
 rm -rf /tmp/IP2LOCATION-LITE-DB1.IPV6.csv
