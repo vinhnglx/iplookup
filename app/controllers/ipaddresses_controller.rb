@@ -4,21 +4,69 @@ class IpaddressesController < ApplicationController
   def index
     ip_address = ip_params['ip_addr']
     ip_integer = ip_to_integer(ip_address)
-    unless ip_v4_valid?(ip_address) || ip_v6_valid?(ip_address)
-      render json: { error_message: 'The format of your IP address does not valid!!!' }, status: :bad_request and return
-    end
-    render json: { error_message: 'Private IP address.' }, status: :not_found and return if private_ip?(ip_integer)
-    render json: { error_message: 'Invalid IP address.' }, status: :not_found and return if invalid_ip?(ip_integer, ip_address)
-
-    ip_add = ip_country(ip_integer)
-    if !(ip_add.try(:name).nil? && ip_add.try(:code).nil?)
-      render json: { country: ip_add.name, code: ip_add.code }, status: :ok
-    else
-      render json: { error_message: 'The IP is not available' }, status: :not_found
-    end
+    invalid_ip_format(ip_address); return if performed?
+    private_invalid_ip(ip_address, ip_integer); return if performed?
+    verify_ip(ip_address, ip_integer); return if performed?
   end
 
   private
+
+    # Render error message for private ip or invalid ip addresses
+    #
+    # ip_address  - ip address
+    # ip_integer  - integer ip address
+    #
+    # Examples
+    #
+    #   private_invalid_ip('10.0.0.5', 167772165)
+    #   # => { error_message: 'Private IP address.' }
+    #
+    #   private_invalid_ip('::ffff:0.255.255.200', 281470698520520)
+    #   # => { error_message: 'Invalid IP address.' }
+    #
+    # Returns the json error message
+    def private_invalid_ip(ip_address, ip_integer)
+      render json: { error_message: 'Private IP address.' }, status: :not_found and return if private_ip?(ip_integer)
+      render json: { error_message: 'Invalid IP address.' }, status: :not_found and return if invalid_ip?(ip_integer, ip_address)
+    end
+
+    # Render error message for invalid ip format
+    #
+    # ip_address  - ip address
+    #
+    # Examples
+    #   invalid_ip_format('2309230.209.23929.390923')
+    #   # => { error_message: 'The format of your IP address does not valid!!!' }
+    #
+    # Returns the json error message
+    def invalid_ip_format(ip_address)
+      unless ip_v4_valid?(ip_address) || ip_v6_valid?(ip_address)
+        render json: { error_message: 'The format of your IP address does not valid!!!' }, status: :bad_request and return
+      end
+    end
+
+    # Verify ip and return country
+    #
+    # ip_address  - ip address
+    # ip_integer  - integer ip address
+    #
+    # Examples
+    #
+    #   verify_ip('1.0.1.0', 23092309)
+    #   # => { country: 'Viet Nam', code: 'VN' }
+    #
+    #   verify_ip('127.0.0.1', 23092309)
+    #   # => { error_message: 'The IP is not available' }
+    #
+    # Return the json message
+    def verify_ip(ip_address, ip_integer)
+      ip_add = ip_country(ip_integer)
+      if !(ip_add.try(:name).nil? && ip_add.try(:code).nil?)
+        render json: { country: ip_add.name, code: ip_add.code }, status: :ok
+      else
+        render json: { error_message: 'The IP is not available' }, status: :not_found
+      end
+    end
 
     # Permit params ip_addr
     #
