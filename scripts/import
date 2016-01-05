@@ -34,7 +34,7 @@ rm -rf IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP IP2LOCATION-LITE-DB1.CSV.ZIP LICENSE-CC
 echo "*****************************************"
 echo "* Import CSV files to database          *"
 echo "*****************************************"
-cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.csv rake import:ipaddrs
-cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv rake import:ipaddrs
+cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.csv rake import:ipaddrs -s
+cd $PWD && FILE=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv rake import:ipaddrs -s
 rm -rf /tmp/IP2LOCATION-LITE-DB1.csv
 rm -rf /tmp/IP2LOCATION-LITE-DB1.IPV6.csv
