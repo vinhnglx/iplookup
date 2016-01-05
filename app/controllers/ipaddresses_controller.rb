@@ -2,10 +2,19 @@ class IpaddressesController < ApplicationController
   include IpUtilities
 
   def index
+    # Get ip address from ip_addr parameter
     ip_address = ip_params['ip_addr']
+
+    # Converts ip address to integer
     ip_integer = ip_to_integer(ip_address)
+
+    # Returns the error message in case invalid ip format
     invalid_ip_format(ip_address); return if performed?
+
+    # Returns the error message in case invalid ip address or private ip address
     private_invalid_ip(ip_address, ip_integer); return if performed?
+
+    # Returns the country from ip address
     verify_ip(ip_address, ip_integer); return if performed?
   end
 

@@ -125,4 +125,23 @@ RSpec.describe IpUtilities do
       expect(included.ip_to_integer(ip_address)).to be_a(Integer)
     end
   end
+
+  context '.socket_type' do
+    let(:ip_v4) { '113.222.29.10' }
+    let(:ip_v6) { '::1:b5e5:21f4:7fc8' }
+
+    describe 'ipv4' do
+      it 'returns corresponding socket from ip address' do
+        expect(extended_class.socket_type(ip_v4)).to be_truthy
+        expect(included.socket_type(ip_v4)).to be_truthy
+      end
+    end
+
+    describe 'ipv6' do
+      it 'returns corresponding socket from ip address' do
+        expect(extended_class.socket_type(ip_v6)).to be_truthy
+        expect(included.socket_type(ip_v6)).to be_truthy
+      end
+    end
+  end
 end

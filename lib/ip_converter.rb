@@ -8,7 +8,7 @@ class IpConverter
   # ip_address  - The ip address
   # socket_type - The address familly of this ip address.
   #                 Socket::AF_INET for ip v4
-  #                 Socket::AF_INET6 for ip 6
+  #                 Socket::AF_INET6 for ip v6
   #
   # Examples
   #
