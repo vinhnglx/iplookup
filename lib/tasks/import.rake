@@ -1,4 +1,4 @@
-require 'ipaddresses'
+require 'ip_address'
 
 namespace :import do
   desc 'Import the IP addresses'
@@ -14,18 +14,31 @@ namespace :import do
     ipaddrs = ip.ipaddrs
 
     # Create basic progress bar
-    progressbar = ProgressBar.create(title: 'IpAddress', starting_at: 0, total: 70000, format: '%a <%B> %p%% %t')
+    progressbar = ProgressBar.create(title: 'IpAddress', starting_at: 0, total: ipaddrs.count, format: '%a <%B> %p%% %t')
 
     # Loop ipaddrs to create Country and Ipaddress
     ipaddrs.each do |ipad|
       # Increment progress bar
       progressbar.increment
 
-      # Create country
-      country = Country.find_or_create_by(code: ipad[:country_code], name: ipad[:country_name])
+      created_at = Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')
+      name = ActiveRecord::Base.connection.quote(ipad[:country_name])
+      code = ActiveRecord::Base.connection.quote(ipad[:country_code])
+      ip_address = ActiveRecord::Base.connection.quote(ipad[:ip_address])
 
-      # Create Ipaddress
-      Ipaddress.find_or_create_by(ip_addresses: ipad[:ip_address], country_id: country.id)
+      # Create country
+      country_count = "select count(*) from countries where name = #{name} and code = #{code}"
+      if ActiveRecord::Base.connection.execute(country_count).first['count(*)'] == 0
+        country_sql = "INSERT INTO countries (name, code, created_at, updated_at) VALUES (#{name}, #{code}, '#{created_at}', '#{created_at}')"
+        country = ActiveRecord::Base.connection.execute(country_sql)
+        country_id = ActiveRecord::Base.connection.last_inserted_id(country)
+      end
+
+      ip_count = "select count(*) from ipaddresses where ip_addresses = #{ip_address} and country_id = '#{country_id}'"
+      if ActiveRecord::Base.connection.execute(ip_count).first['count(*)'] == 0
+        ip_sql = "INSERT INTO ipaddresses (ip_addresses, country_id, created_at, updated_at) VALUES (#{ip_address}, '#{country_id}', '#{created_at}', '#{created_at}')"
+        ActiveRecord::Base.connection.execute(ip_sql)
+      end
     end
 
     puts 'DONE'

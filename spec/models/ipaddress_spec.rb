@@ -26,4 +26,21 @@ RSpec.describe Ipaddress, type: :model do
   context 'relations' do
     it { should belong_to(:country) }
   end
+
+  context 'delegate' do
+    let(:country) { create(:country, name: 'Viet Nam', code: 'VN') }
+    let(:ipaddress) { create(:ipaddress, country: country) }
+
+    describe '.name' do
+      it 'returns country name' do
+        expect(ipaddress.name).to eq 'Viet Nam'
+      end
+    end
+
+    describe '.code' do
+      it 'returns country code' do
+        expect(ipaddress.code).to eq 'VN'
+      end
+    end
+  end
 end

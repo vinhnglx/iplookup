@@ -16,4 +16,8 @@ class Ipaddress < ActiveRecord::Base
 
   # Relations
   belongs_to :country
+
+  # Delegate
+  delegate :name, to: :country
+  delegate :code, to: :country
 end
