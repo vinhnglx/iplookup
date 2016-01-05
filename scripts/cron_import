@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# You need to edit this line to update the PROJECT_PATH
+PROJECT_PATH = /Users/vinhnguyen/Documents/projects/GitHub/roomorama/iplookup
+
+# Run script on the first of every month at 2:00 AM
+0 2 1 * * cd $PROJECT_PATH && ./scripts/import
