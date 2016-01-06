@@ -17,23 +17,15 @@ namespace :import do
       progressbar.increment
 
       created_at = Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')
-      name = ActiveRecord::Base.connection.quote(row[3])
-      code = ActiveRecord::Base.connection.quote(row[2])
-      ip_address = ActiveRecord::Base.connection.quote("[#{row[0]}, #{row[1]}]")
+      name = row[3]
+      code = row[2]
+      ip_address = "[#{row[0]}, #{row[1]}]"
 
       # Create country
-      country_count = "select count(*) from countries where name = #{name} and code = #{code}"
-      if ActiveRecord::Base.connection.execute(country_count).first['count(*)'] == 0
-        country_sql = "INSERT INTO countries (name, code, created_at, updated_at) VALUES (#{name}, #{code}, '#{created_at}', '#{created_at}')"
-        country = ActiveRecord::Base.connection.execute(country_sql)
-        country_id = ActiveRecord::Base.connection.last_inserted_id(country)
-      end
+      country = Country.find_or_create_by(name: name, code: code)
 
-      ip_count = "select count(*) from ipaddresses where ip_addresses = #{ip_address} and country_id = '#{country_id}'"
-      if ActiveRecord::Base.connection.execute(ip_count).first['count(*)'] == 0
-        ip_sql = "INSERT INTO ipaddresses (ip_addresses, country_id, created_at, updated_at) VALUES (#{ip_address}, '#{country_id}', '#{created_at}', '#{created_at}')"
-        ActiveRecord::Base.connection.execute(ip_sql)
-      end
+      # Create ip address
+      Ipaddress.find_or_create_by(ip_addresses: ip_address, country_id: country.id)
     end
 
     puts 'DONE'
