@@ -1,3 +1,5 @@
+require 'csv'
+
 namespace :import do
   desc 'Import the IP addresses'
   task :ipaddrs, [:filename] => :environment do
