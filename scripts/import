@@ -31,17 +31,54 @@ unzip -o IP2LOCATION-LITE-DB1.CSV.ZIP
 unzip -o IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP
 rm -rf IP2LOCATION-LITE-DB1.IPV6.CSV.ZIP IP2LOCATION-LITE-DB1.CSV.ZIP LICENSE-CC-BY-SA-4.0.TXT README_LITE.TXT
 
-echo "*****************************************"
-echo "* Import CSV files to database          *"
-echo "*****************************************"
+echo "***************************************"
+echo "* Split and Import CSV files          *"
+echo "***************************************"
+NUMBER_OF_SPLIT_LINES=30000
+BIG_FILE_PATH_v4=/tmp/IP2LOCATION-LITE-DB1.csv
+SPLIT_FILE_PREFIX_v4="small_v4"
+SPLIT_FILES_v4=/tmp/$SPLIT_FILE_PREFIX*
 
-# Need to replace the project path
-rails_app_home () {
-  cd /Users/vinhnguyen/Documents/projects/GitHub/roomorama/iplookup
+BIG_FILE_PATH_v6=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv
+SPLIT_FILE_PREFIX_v6="small_v6"
+SPLIT_FILES_v6=/tmp/$SPLIT_FILE_PREFIX*
+
+temp_home () {
+  cd /tmp
 }
 
-rails_app_home && FILE=/tmp/IP2LOCATION-LITE-DB1.csv rake import:ipaddrs -s
-rails_app_home && FILE=/tmp/IP2LOCATION-LITE-DB1.IPV6.csv rake import:ipaddrs -s
+rails_app_home () {
+  cd /current/project/directory
+}
 
-rm -rf /tmp/IP2LOCATION-LITE-DB1.csv
-rm -rf /tmp/IP2LOCATION-LITE-DB1.IPV6.csv
+split_big_csv_into_small_chunks () {
+  echo "Processing $BIG_FILE_PATH_v4"
+  echo "Split $BIG_FILE_PATH_v4 file into small chunks with size $NUMBER_OF_SPLIT_LINES lines..."
+  temp_home && split -l $NUMBER_OF_SPLIT_LINES $BIG_FILE_PATH_v4 $SPLIT_FILE_PREFIX_v4
+  rm -rf $BIG_FILE_PATH_v4
+
+  echo "Processing $BIG_FILE_PATH_v6"
+  echo "Split $BIG_FILE_PATH_v6 file into small chunks with size $NUMBER_OF_SPLIT_LINES lines..."
+  temp_home && split -l $NUMBER_OF_SPLIT_LINES $BIG_FILE_PATH_v6 $SPLIT_FILE_PREFIX_v6
+  rm -rf $BIG_FILE_PATH_v6
+}
+
+process_split_files () {
+  echo "Script executed from: ${PWD}"
+  for f in $SPLIT_FILES_v4
+  do
+    echo "Processing $f file..."
+    rails_app_home && FILE=$f rake import:ipaddrs -s
+    rm -rf $f
+  done
+
+  for f in $SPLIT_FILES_v6
+  do
+    echo "Processing $f file..."
+    rails_app_home && FILE=$f rake import:ipaddrs -s
+    rm -rf $f
+  done
+}
+
+split_big_csv_into_small_chunks
+process_split_files

@@ -13,6 +13,24 @@ bundle install
 bundle exec rake db:create db:migrate
 ```
 
+**2. Config your project directory before import:**
+
+- Edit `scripts/import` file - line 51 - `rails_app_home` function
+
+```
+rails_app_home () {
+  cd /current/project/directory
+}
+```
+
+- Edit `scripts/cron_import` file - line 4 - `rails_app_home` function
+
+```
+rails_app_home () {
+  cd /current/project/directory
+}
+```
+
 **2. Import data:**
 
 ```
@@ -57,7 +75,7 @@ crontab scripts/cron_import
 
   - [Resolv IPv4](http://docs.ruby-lang.org/en/2.2.0/Resolv/IPv4.html) and [Resolv IPv6](http://docs.ruby-lang.org/en/2.2.0/Resolv/IPv6.html) Resolv Ipv4 and Ipv6 will supply regex.
 
-7. I wrote 4 libraries:
+7. I wrote 3 libraries:
 
   - [Countries](lib/countries.rb) - This library will return country codes and country name. The country code and names will be used in Country model. I downloaded the list of countries from this link: http://data.okfn.org/data/core/country-list
 
@@ -66,12 +84,6 @@ crontab scripts/cron_import
 
   validates :code, inclusion: { in: Countries.new.country_codes }
   validates :name, inclusion: { in: Countries.new.country_names }
-  ```
-
-  - [IpAddress](lib/ip_address.rb) - This library will read the IP CSV files and return arrays that will be used in import task
-
-  ```
-  [{ip_address: '[16777216, 16777471]', country_name: 'Australia', country_code: 'AU'}]
   ```
 
   - [IpConverter](lib/ip_converter.rb) - This library will convert the ip address to integer.
