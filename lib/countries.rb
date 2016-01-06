@@ -4,6 +4,8 @@ require 'i18n'
 class Countries
   attr_reader :csv_file
 
+  CSV_PATH = Rails.root.join('lib', 'countries', 'countries.csv').to_path
+
   # Public: Initialize a new countries object
   #
   # csv_file  - The path to current country csv file
@@ -13,7 +15,7 @@ class Countries
   #   Countries.new(/path/to/csv_file)
   #
   # Returns the object
-  def initialize(csv_file = Rails.root.join('lib', 'countries', 'countries.csv').to_path)
+  def initialize(csv_file = CSV_PATH)
     @csv_file = csv_file
   end
 

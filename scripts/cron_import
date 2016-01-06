@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# You need to edit this line to update the PROJECT_PATH
+rails_app_home () {
+  cd /current/project/directory
+}
+# Run script on the first of every month at 2:00 AM
+0 2 1 * * rails_app_home && ./scripts/import

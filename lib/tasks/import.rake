@@ -1,30 +1,25 @@
-require 'ip_address'
+require 'csv'
 
 namespace :import do
   desc 'Import the IP addresses'
   task :ipaddrs, [:filename] => :environment do
-    # Initial ip object
-    ip = IpAddress.new(ENV['FILE']) unless Rails.env == 'test'
 
     # Can't pass the FILE as argument when test rake task.
     # So, temporary, I'll hard code a csv path.
-    ip = IpAddress.new('spec/fixtures/ipaddresses.v4.csv') if Rails.env == 'test'
-
-    # List of ip addresses and countries
-    ipaddrs = ip.ipaddrs
+    ENV['FILE'] = 'spec/fixtures/ipaddresses.v4.csv' if Rails.env == 'test'
 
     # Create basic progress bar
-    progressbar = ProgressBar.create(title: 'IpAddress', starting_at: 0, total: ipaddrs.count, format: '%a <%B> %p%% %t')
+    progressbar = ProgressBar.create(title: 'IpAddress', starting_at: 0, total: CSV.foreach(ENV['FILE']).count, format: '%a <%B> %p%% %t')
 
     # Loop ipaddrs to create Country and Ipaddress
-    ipaddrs.each do |ipad|
+    CSV.foreach(ENV['FILE']) do |row|
       # Increment progress bar
       progressbar.increment
 
       created_at = Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')
-      name = ActiveRecord::Base.connection.quote(ipad[:country_name])
-      code = ActiveRecord::Base.connection.quote(ipad[:country_code])
-      ip_address = ActiveRecord::Base.connection.quote(ipad[:ip_address])
+      name = ActiveRecord::Base.connection.quote(row[3])
+      code = ActiveRecord::Base.connection.quote(row[2])
+      ip_address = ActiveRecord::Base.connection.quote("[#{row[0]}, #{row[1]}]")
 
       # Create country
       country_count = "select count(*) from countries where name = #{name} and code = #{code}"

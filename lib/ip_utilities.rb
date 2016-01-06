@@ -1,7 +1,7 @@
 module IpUtilities
   # Check an ip invalid or not. Invalid IP following ranges
-  #   0.0.0.0 - 0.255.255.255 (0 - 16777215): IPv4
-  #   :: - ::ffff:0.255.255.255 (0 - 281470698520575): IPv6
+  #   0.0.0.0 - 0.255.255.255 (0 - 167_772_15): IPv4
+  #   :: - ::ffff:0.255.255.255 (0 - 281_470_698_520_575): IPv6
   #
   # ip_integer  - integer ip address
   # ip_addr     - ip address.
@@ -28,11 +28,11 @@ module IpUtilities
   end
 
   # Check an ip private or not. Private IP following ranges
-  #   192.168.0.0 (3232235520) - 192.168.255.255 (3232301055)
-  #   172.16.0.0 (2886729728) - 172.31.255.255 (2887778303)
-  #   10.0.0.0 (167772160) - 10.255.255.255 (184549375)
+  #   192.168.0.0 (323_223_552_0) - 192.168.255.255 (323_230_105_5)
+  #   172.16.0.0 (288_672_972_8) - 172.31.255.255 (288_777_830_3)
+  #   10.0.0.0 (167_772_160) - 10.255.255.255 (184_549_375)
   #
-  # ip_integer  - integer inp address
+  # ip_integer  - integer ip address
   #
   # Examples
   #
@@ -115,7 +115,24 @@ module IpUtilities
   #
   # Returns an Integer value
   def ip_to_integer(ip_address)
-    return IpConverter.new(ip_address, Socket::AF_INET).to_integer if ip_v4_valid?(ip_address)
-    return IpConverter.new(ip_address, Socket::AF_INET6).to_integer if ip_v6_valid?(ip_address)
+    IpConverter.new(ip_address, socket_type(ip_address)).to_integer
+  end
+
+  # Return corresponding socket type from ip address
+  #
+  # ip_address  - ip address
+  #
+  # Examples
+  #
+  #   socket_type("192.168.0.1")
+  #   # => Socket::AF_INET
+  #
+  #   socket_type("ff02::1")
+  #   # => Socket::AF_INET6
+  #
+  # Returns Socket constant
+  def socket_type(ip_address)
+    return Socket::AF_INET if ip_v4_valid?(ip_address)
+    return Socket::AF_INET6 if ip_v6_valid?(ip_address)
   end
 end
