@@ -60,6 +60,7 @@ crontab scripts/cron_import
 # My Notes
 
 1. The IP address available for free at http://download.ip2location.com/lite/. This service will auto-update the IP address every month.
+  - The cronjob will auto-run at 2:00 AM on the first of every month.
 
 2. After download, the format of IP address is integer numbers, so here are a few my notes:
 
