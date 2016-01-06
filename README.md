@@ -91,6 +91,8 @@ crontab scripts/cron_import
 
   - [IpUtilities](lib/ip_utilities.rb) - This library supply helpful methods.
 
+8. I've setup the [Circle CI](https://circleci.com/gh/vinhnglx/iplookup) and [Ruby-Saddler](https://github.com/packsaddle/ruby-saddler) to run test cases and check the coding style.
+
 # TODO
 
 Actually, this service is built in short time, so some parts need to be improved.
